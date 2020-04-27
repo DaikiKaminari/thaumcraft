@@ -1,0 +1,25 @@
+--- GLOBAL VARIABLES ---
+
+--- INIT ---
+local function init(apis)
+    for _,v in pairs(apis) do
+        if not fs.exists(v) then
+            error("API [" .. v .. "] does not exist.")
+        end
+        os.loadAPI(v)
+    end
+    for _,v in pairs(apis) do
+        if v.init ~= nil then
+            v.init()
+        end
+    end
+end
+
+--- UTILS ---
+
+--- FUNCTIONS ---
+local function main()
+    init("lib/objectJSON")
+end
+
+main()
