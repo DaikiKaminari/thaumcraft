@@ -1,4 +1,3 @@
-local api
 ------------------------------------------------------------------ utils
 local controls = {["\n"]="\\n", ["\r"]="\\r", ["\t"]="\\t", ["\b"]="\\b", ["\f"]="\\f", ["\""]="\\\"", ["\\"]="\\\\"}
 
@@ -85,12 +84,10 @@ end
 function encode(val)
 	return encodeCommon(val, false, 0, {})
 end
-api.encode = encode
 
 function encodePretty(val)
 	return encodeCommon(val, true, 0, {})
 end
-api.encodePretty = encodePretty
 
 ------------------------------------------------------------------ decoding
 
@@ -203,7 +200,6 @@ function decode(str)
 	t = parseValue(str)
 	return t
 end
-api.decode = decode
 
 function decodeFromFile(path)
 	local file = assert(fs.open(path, "r"))
@@ -211,6 +207,3 @@ function decodeFromFile(path)
 	file.close()
 	return decoded
 end
-api.decodeFromFile = decodeFromFile
-
-return api
