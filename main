@@ -52,7 +52,7 @@ end
 
 -- main call
 local function main()
-    init("lib/objectJSON")
+    init({"lib/objectJSON"})
     periphInit()
 end
 
