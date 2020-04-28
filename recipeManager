@@ -11,8 +11,6 @@ local function getPedestalItem(pedestal)
     return pedestal.getStackInSlot(1)
 end
 
-end
-
 local function getAltarItems(pedestals)
     local items = {}
     local item
