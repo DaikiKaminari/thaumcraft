@@ -7,13 +7,17 @@ local pedestals = {}    -- table : peripherals - all pedestals
 
 --- INIT ---
 local function periphInit()
-    centerPedestal = peripherals.find("container_pedestal_" .. centerPedestalNumber)
+    centerPedestal = peripheral.wrap("container_pedestal_" .. centerPedestalNumber)
     if centerPedestal == nil then
         error("Center pedestal missing or wrong number : " .. centerPedestalNumber)
     end
-    for _,v in pairs(pedestals.getNames()) do
+    for _,v in pairs(peripheral.getNames()) do
+        print("TEST")
+        print(v)
+        print(v:find("container_pedestal"))
+        print()
         if v:find("container_pedestal") then
-            pedestals[v] = peripherals.find(v)
+            pedestals[v] = peripheral.wrap(v)
         end
     end
     if #pedestals < 12 then
@@ -36,7 +40,7 @@ local function init(apis)
             api = v
         end
         if _G[api].init ~= nil then
-            api.init()
+            _G[api].init()
         end
     end
 end
