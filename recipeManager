@@ -1,0 +1,55 @@
+function init()
+    print("\n--- INIT recipeManager ---")
+    os.loadAPI("lib/objectJSON")
+    if not fs.exists("recipes") then
+        objectJSON.encodeAndSavePretty("recipes", {})
+    end
+	print("recipeManager loaded\n")
+end
+
+local function getPedestalItem(pedestal)
+    return pedestal.getStackInSlot(1)
+end
+
+end
+
+local function getAltarItems(pedestals)
+    local items = {}
+    local item
+    for _,p in pairs(pedestals) do
+        item = getPedestalItem(p)
+        if item ~= nil then
+            items[#items+1] = item
+        end
+    end
+    return items
+end
+
+function saveRecipe(pedestals, centerPedestal)
+    local inputItems = getAltarItems(pedestals)
+    local centerItem = getPedestalItem(centerPedestal)
+
+    while getPedestalItem(centerPedestal) == centerItem or getPedestalItem(centerPedestal) == nil do -- A MODIFIER !!
+        sleep(1)
+    end
+
+    local outputItem = getPedestalItem(centerPedestal)
+
+    if inputItems == nil or inputItems == {} or centerItem == nil or outputItem == nil then
+        print("Failed to add recipe.")
+        return
+    end
+
+    local recipes = objectJSON.decodeFromFile("recipes")
+    if recipes == nil then
+        error("Failed to get recipes.")
+    end
+
+    local newItem = {}
+    newItem["inputItems"] = inputItems
+    newItem["centerItem"] = centerItem
+    newItem["outputItem"] = outputItem
+    recipes[#recipes + 1] = newItem
+
+    objectJSON.encodeAndSavePretty("recipes", recipes)
+end

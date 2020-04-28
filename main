@@ -29,7 +29,7 @@ local function init(apis)
         if not fs.exists(path) then
             error("API [" .. path .. "] does not exist.")
         end
-        print("\nLoading API : [" .. path .. "] ...")
+        print("\nLoading API : [" .. path .. "]")
         os.loadAPI(path)
     end
     for _,path in pairs(apis) do
@@ -58,8 +58,11 @@ end
 
 -- main call
 local function main()
-    init({"lib/objectJSON"})
+    init({"lib/objectJSON", "recipeManager"})
     periphInit()
+
+    io.read()
+    recipeManager.saveRecipe(pedestals, centerPedestal)
 end
 
 main()

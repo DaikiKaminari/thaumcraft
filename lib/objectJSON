@@ -87,7 +87,7 @@ function encodeAndSavePretty(filename, obj)
 		error("obj cannot be nil.")
 	end
 	if not fs.exists(filename) then
-		error("File " .. filename .. " does not exist.")
+		print("Creating file [" .. filename .. "]")
 	end
 	local h = fs.open(filename, "w")
 	h.write(json.encodePretty(obj))
