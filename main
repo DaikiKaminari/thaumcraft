@@ -1,9 +1,11 @@
 --- CONFIG ---
 local centerPedestalName = "container_pedestal_12"
+local chestName = "tile_extrautils_chestfull_name_2"
 
 --- GLOBAL VARIABLES ---
 local centerPedestal    -- table : peripheral - the center pedestal
 local pedestals = {}    -- table : peripherals - all pedestals
+local chest             -- table : peripheral - input chest
 
 --- INIT ---
 local function periphInit()
@@ -20,6 +22,10 @@ local function periphInit()
     end
     if #pedestals < 12 then
         error("Missing pedestals, only [" .. tostring(#pedestals) .. "] were found.")
+    end
+    chest = peripheral.wrap(chestName)
+    if chest == nil then
+        error("Chest missing or wrong config : [" .. chestName .. "].")
     end
 end
 
@@ -62,7 +68,13 @@ local function main()
     periphInit()
 
     io.read()
-    recipeManager.saveRecipe(pedestals, centerPedestal)
+    local inputItems = chest.getAllStacks()
+    local r = recipeManager.getMatchingRecipe(inputItems)
+    if r == nil then
+        print("No recipe found.")
+    else
+        print(textutils.serialise(r))
+    end
 end
 
 main()

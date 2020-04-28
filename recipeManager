@@ -33,6 +33,63 @@ local function getRecipes()
     return recipes
 end
 
+local function isRecipePresent(centerItem)
+    local recipes = getRecipes()
+    for _,r in pairs(recipes) do
+        if r["centerItem"].id == centerItem.id then
+            return true
+        end
+    end
+    return false
+end
+
+local function isIdentical(tab1, tab2)
+    for _,v1 in pairs(tab1) do
+        local matching = false
+        for _,v2 in pairs(tab2) do
+            if v1 == v2 then
+                matching = true
+            end
+        end
+        if matching == false then
+            return false
+        end
+    end
+
+    for _,v1 in pairs(tab2) do
+        local matching = false
+        for _,v2 in pairs(tab1) do
+            if v1 == v2 then
+                matching = true
+            end
+        end
+        if matching == false then
+            return false
+        end
+    end
+
+    return true
+end
+
+local function getMatchingRecipe(inputItems)
+    local inputItemsID = {}
+    for _,item in pairs(inputItems) do
+        inputItemsID[#inputItemsID+1] = item.id
+    end
+
+    local recipes = getRecipes()
+    for _,r in pairs(recipes) do
+        local itemsID = {}
+        for _,item in r.inputItems do
+            itemsID[#itemsID+1] = item.id
+        end
+        if isIdentical(inputItemsID, itemsID) then
+            return r
+        end
+    end
+    return nil
+end
+
 --- FUNCTIONS ---
 function saveRecipe(pedestals, centerPedestal)
     local inputItems = getAltarItems(pedestals)
@@ -40,6 +97,14 @@ function saveRecipe(pedestals, centerPedestal)
     if inputItems == nil or inputItems == {} or centerItem == nil then
         print("\nFailed to add recipe.")
         return
+    end
+    -- case recipe already exists
+    if isRecipePresent(centerItem) then
+        print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
+        if io.read():lower() ~= "yes" then
+            print("\nRecipe not edited or deleted.")
+            return
+        end
     end
 
     local timeout = 0
@@ -68,30 +133,4 @@ function saveRecipe(pedestals, centerPedestal)
 
     objectJSON.encodeAndSavePretty("recipes", recipes)
     print("\nSuccessfully added recipe.")
-end
-
-local function isRecipePresent(centerItem)
-    local recipes = getRecipes()
-    for _,r in pairs(recipes) do
-        if r["centerItem"].id == centerItem.id then
-            return true
-        end
-    end
-    return false
-end
-
-function manager(pedestals, centerPedestal)
-    print("\nAdding recipe process begin...")
-    local centerItem = getPedestalItem(centerPedestal)
-    -- case recipe already exists
-    if isRecipePresent(centerItem) then
-        print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
-        if not io.read():lower() == "yes" then
-            print("\nRecipe not edited or deleted.")
-            return
-        end
-    end
-
-    -- case recipe does not exist
-    saveRecipe(pedestals, centerPedestal)
 end
