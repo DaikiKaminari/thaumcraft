@@ -12,7 +12,7 @@ local function periphInit()
         error("Center pedestal missing or wrong number : " .. centerPedestalNumber)
     end
     for _,v in pairs(pedestals.getNames()) do
-        if string.find(v, "container_pedestal") then
+        if v:find("container_pedestal") then
             pedestals[v] = peripherals.find(v)
         end
     end
@@ -27,14 +27,14 @@ local function init(apis)
         if not fs.exists(path) then
             error("API [" .. path .. "] does not exist.")
         end
+        print("\nLoading API : [" .. path .. "] ...")
         os.loadAPI(path)
     end
     for _,path in pairs(apis) do
-        local api = string.gmatch(path, "([^/]+)")
-        print(api)
-        print(_G[api])
-        print(_G[api].init)
-        print("_________")
+        local api
+        for v in path:gmatch("([^/]+)") do
+            api = v
+        end
         if _G[api].init ~= nil then
             api.init()
         end
