@@ -1,5 +1,5 @@
 --- CONFIG ---
-local centerPedestalNumber = "12"
+local centerPedestalName = "container_pedestal_12"
 
 --- GLOBAL VARIABLES ---
 local centerPedestal    -- table : peripheral - the center pedestal
@@ -7,17 +7,15 @@ local pedestals = {}    -- table : peripherals - all pedestals
 
 --- INIT ---
 local function periphInit()
-    centerPedestal = peripheral.wrap("container_pedestal_" .. centerPedestalNumber)
+    centerPedestal = peripheral.wrap(centerPedestalName)
     if centerPedestal == nil then
         error("Center pedestal missing or wrong number : " .. centerPedestalNumber)
     end
+    local i = 1
     for _,v in pairs(peripheral.getNames()) do
-        print("TEST")
-        print(v)
-        print(v:find("container_pedestal"))
-        print()
-        if v:find("container_pedestal") then
-            pedestals[v] = peripheral.wrap(v)
+        if v:find("container_pedestal") ~= nil then
+            pedestals[i] = peripheral.wrap(v)
+            i = i + 1
         end
     end
     if #pedestals < 12 then
