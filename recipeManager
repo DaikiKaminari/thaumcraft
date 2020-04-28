@@ -71,7 +71,7 @@ local function isIdentical(tab1, tab2)
     return true
 end
 
-local function getMatchingRecipe(inputItems)
+function getMatchingRecipe(inputItems)
     local inputItemsID = {}
     for _,item in pairs(inputItems) do
         inputItemsID[#inputItemsID+1] = item.id
@@ -80,7 +80,7 @@ local function getMatchingRecipe(inputItems)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
         local itemsID = {}
-        for _,item in r.inputItems do
+        for _,item in pairs(r.inputItems) do
             itemsID[#itemsID+1] = item.id
         end
         if isIdentical(inputItemsID, itemsID) then

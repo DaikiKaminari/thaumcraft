@@ -68,7 +68,16 @@ local function main()
     periphInit()
 
     io.read()
-    local inputItems = chest.getAllStacks()
+    recipeManager.saveRecipe(pedestals, centerPedestal)
+
+    local inputItems = {}
+    local item
+    for i=1,#chest.getInventorySize() do
+        item = chest.getStackInSlot(i)
+        if item ~= nil then
+            inputItems[#inputItems+1] = item
+        end
+    end
     local r = recipeManager.getMatchingRecipe(inputItems)
     if r == nil then
         print("No recipe found.")
