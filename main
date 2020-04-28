@@ -31,7 +31,11 @@ local function init(apis)
     end
     for _,path in pairs(apis) do
         local api = string.gmatch(path, "([^/]+)")
-        if _G[api].init() ~= nil then
+        print(api)
+        print(_G[api])
+        print(_G[api].init)
+        print("_________")
+        if _G[api].init ~= nil then
             api.init()
         end
     end

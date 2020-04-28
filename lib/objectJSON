@@ -6,7 +6,7 @@ function init()
 		error("lib/json")
 	end
 	os.loadAPI("lib/json")
-	print("lib/json loaded")
+	print("lib/json loaded\n")
 end
 
 --- FUNCTIONS ---
