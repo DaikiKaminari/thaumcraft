@@ -1,3 +1,4 @@
+--- INIT ---
 function init()
     print("\n--- INIT recipeManager ---")
     os.loadAPI("lib/objectJSON")
@@ -7,6 +8,7 @@ function init()
 	print("recipeManager loaded\n")
 end
 
+--- UTILS ---
 local function getPedestalItem(pedestal)
     return pedestal.getStackInSlot(1)
 end
@@ -23,11 +25,20 @@ local function getAltarItems(pedestals)
     return items
 end
 
+local function getRecipes()
+    local recipes = objectJSON.decodeFromFile("recipes")
+    if recipes == nil then
+        error("\nFailed to get recipes.")
+    end
+    return recipes
+end
+
+--- FUNCTIONS ---
 function saveRecipe(pedestals, centerPedestal)
     local inputItems = getAltarItems(pedestals)
     local centerItem = getPedestalItem(centerPedestal)
     if inputItems == nil or inputItems == {} or centerItem == nil then
-        print("Failed to add recipe.")
+        print("\nFailed to add recipe.")
         return
     end
 
@@ -35,7 +46,7 @@ function saveRecipe(pedestals, centerPedestal)
     local outputItem = getPedestalItem(centerPedestal)
     while outputItem == nil or outputItem.id == centerItem.id  do
         if timeout >= 3 then
-            print("Process of adding recipe cancelled.")
+            print("\nAdding recipe cancelled by user.")
             return
         end
         if outputItem == nil then
@@ -44,12 +55,10 @@ function saveRecipe(pedestals, centerPedestal)
             timeout = 0
         end
         sleep(1)
+        outputItem = getPedestalItem(centerPedestal)
     end    
 
-    local recipes = objectJSON.decodeFromFile("recipes")
-    if recipes == nil then
-        error("Failed to get recipes.")
-    end
+    local recipes = getRecipes()
 
     local newItem = {}
     newItem["inputItems"] = inputItems
@@ -58,4 +67,31 @@ function saveRecipe(pedestals, centerPedestal)
     recipes[#recipes + 1] = newItem
 
     objectJSON.encodeAndSavePretty("recipes", recipes)
+    print("\nSuccessfully added recipe.")
+end
+
+local function isRecipePresent(centerItem)
+    local recipes = getRecipes()
+    for _,r in pairs(recipes) do
+        if r["centerItem"].id == centerItem.id then
+            return true
+        end
+    end
+    return false
+end
+
+function manager(pedestals, centerPedestal)
+    print("\nAdding recipe process begin...")
+    local centerItem = getPedestalItem(centerPedestal)
+    -- case recipe already exists
+    if isRecipePresent(centerItem) then
+        print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
+        if not io.read():lower() == "yes" then
+            print("\nRecipe not edited or deleted.")
+            return
+        end
+    end
+
+    -- case recipe does not exist
+    saveRecipe(pedestals, centerPedestal)
 end
