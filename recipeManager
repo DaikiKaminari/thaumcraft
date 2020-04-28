@@ -26,17 +26,25 @@ end
 function saveRecipe(pedestals, centerPedestal)
     local inputItems = getAltarItems(pedestals)
     local centerItem = getPedestalItem(centerPedestal)
-
-    while getPedestalItem(centerPedestal) == centerItem or getPedestalItem(centerPedestal) == nil do -- A MODIFIER !!
-        sleep(1)
-    end
-
-    local outputItem = getPedestalItem(centerPedestal)
-
-    if inputItems == nil or inputItems == {} or centerItem == nil or outputItem == nil then
+    if inputItems == nil or inputItems == {} or centerItem == nil then
         print("Failed to add recipe.")
         return
     end
+
+    local timeout = 0
+    local outputItem = getPedestalItem(centerPedestal)
+    while outputItem == nil or outputItem.id == centerItem.id  do
+        if timeout >= 3 then
+            print("Process of adding recipe cancelled.")
+            return
+        end
+        if outputItem == nil then
+            timeout = timeout + 1
+        else
+            timeout = 0
+        end
+        sleep(1)
+    end    
 
     local recipes = objectJSON.decodeFromFile("recipes")
     if recipes == nil then
