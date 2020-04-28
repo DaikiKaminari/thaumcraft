@@ -30,7 +30,8 @@ local function init(apis)
         os.loadAPI(path)
     end
     for _,path in pairs(apis) do
-        if _G[path].init ~= nil then
+        local api = string.gmatch(path, "([^/]+)")
+        if _G[api].init() ~= nil then
             api.init()
         end
     end
