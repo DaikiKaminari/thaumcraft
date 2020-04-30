@@ -71,7 +71,6 @@ local function getRecipe()
     local inputItems = getItems(chest)
     local matchingRecipe = recipeManager.getMatchingRecipe(inputItems)
     if matchingRecipe == nil then
-        print("\nNo recipe found.")
         return nil
     end
     return matchingRecipe
@@ -89,7 +88,7 @@ local function processItem(inputItems, recipe)
     end
     print("\nWAIT OUTPUT")
     local centerItem = centerPedestal.getStackInSlot(1)
-    while centerItem ~= nil and centerItem.id ~= recipe.outputItem.id do
+    while centerItem ~= nil or centerItem.id ~= recipe.outputItem.id do
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
@@ -110,6 +109,10 @@ local function altarManager()
     if getItems(chest) ~= nil then
         local inputItems = getItems(chest)
         local recipe = getRecipe()
+        if recipe == nil then
+            print("\nNo recipe found.")
+            return
+        end
         processItem(inputItems, recipe)
     end
 end
