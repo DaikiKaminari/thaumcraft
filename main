@@ -66,6 +66,17 @@ local function getItems(chest)
 end
 
 --- FUNCTIONS ---
+-- add a new recipe
+local function getRecipe()
+    local inputItems = getItems(chest)
+    local matchingRecipe = recipeManager.getMatchingRecipe(inputItems)
+    if matchingRecipe == nil then
+        print("\nNo recipe found.")
+        return nil
+    end
+    return matchingRecipe
+end
+
 -- manage the altar for autocrafting
 local function altarManager()
     -- user ask to save a new recipe
@@ -79,18 +90,6 @@ local function altarManager()
         processItem(inputItems, recipe)
     end
 end
-
--- add a new recipe
-local function getRecipe()
-    local inputItems = getItems(chest)
-    local matchingRecipe = recipeManager.getMatchingRecipe(inputItems)
-    if matchingRecipe == nil then
-        print("\nNo recipe found.")
-        return nil
-    end
-    return matchingRecipe
-end
-
 
 -- process an item in the altar
 local function processItem(inputItems, recipe)
