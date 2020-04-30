@@ -106,7 +106,7 @@ local function altarManager()
         recipeManager.saveRecipe(pedestals, centerPedestal)
     end
     -- if an item is present in input chest, then autocraft
-    if getItems(chest) ~= nil then
+    if getItems(chest) ~= {} then
         local inputItems = getItems(chest)
         local recipe = getRecipe()
         if recipe == nil then
