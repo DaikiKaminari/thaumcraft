@@ -94,7 +94,7 @@ end
 function saveRecipe(pedestals, centerPedestal)
     local inputItems = getAltarItems(pedestals)
     local centerItem = getPedestalItem(centerPedestal)
-    if inputItems == nil or inputItems == {} or centerItem == nil then
+    if inputItems == nil or next(inputItems) == {} or centerItem == nil then
         print("\nFailed to add recipe.")
         return
     end
