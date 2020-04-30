@@ -77,20 +77,6 @@ local function getRecipe()
     return matchingRecipe
 end
 
--- manage the altar for autocrafting
-local function altarManager()
-    -- user ask to save a new recipe
-    if redstone.getInput("top") then
-        recipeManager.saveRecipe(pedestals, centerPedestal)
-    end
-    -- if an item is present in input chest, then autocraft
-    if getItems(chest) ~= nil then
-        local inputItems = getItems(chest)
-        local recipe = getRecipe()
-        processItem(inputItems, recipe)
-    end
-end
-
 -- process an item in the altar
 local function processItem(inputItems, recipe)
     print("\nPROCESS BEGIN")
@@ -112,6 +98,20 @@ local function processItem(inputItems, recipe)
     end
     centerPedestal.pushItem("north", 1)
     print("\nPROCESS END")
+end
+
+-- manage the altar for autocrafting
+local function altarManager()
+    -- user ask to save a new recipe
+    if redstone.getInput("top") then
+        recipeManager.saveRecipe(pedestals, centerPedestal)
+    end
+    -- if an item is present in input chest, then autocraft
+    if getItems(chest) ~= nil then
+        local inputItems = getItems(chest)
+        local recipe = getRecipe()
+        processItem(inputItems, recipe)
+    end
 end
 
 -- main call
