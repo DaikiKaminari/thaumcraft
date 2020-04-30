@@ -14,7 +14,7 @@ local chest             -- table : peripheral - input chest
 local function periphInit()
     centerPedestal = peripheral.wrap(centerPedestalName)
     if centerPedestal == nil then
-        error("Center pedestal missing or wrong number : " .. centerPedestalNumber)
+        error("Center pedestal missing or wrong config : [" .. centerPedestalName .. "]")
     end
     local i = 1
     for _,v in pairs(peripheral.getNames()) do
