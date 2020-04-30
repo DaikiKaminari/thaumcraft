@@ -100,11 +100,7 @@ local function processItem(inputItems, recipe)
 end
 
 -- manage the altar for autocrafting
-local function altarManager()
-    -- user ask to save a new recipe
-    if redstone.getInput("top") then
-        recipeManager.saveRecipe(pedestals, centerPedestal)
-    end
+local function altarManagement()
     -- if an item is present in input chest, then autocraft
     if next(getItems(chest)) ~= nil then
         local inputItems = getItems(chest)
@@ -117,12 +113,22 @@ local function altarManager()
     end
 end
 
+-- manage recipes
+local function recipeManagement()
+    while true do
+        if redstone.getInput(redstoneSide) then
+            recipeManager.saveRecipe(pedestals, centerPedestal)
+        end
+        sleep(0)
+    end
+end
+
 -- main call
 local function main()
     init({"lib/objectJSON", "recipeManager"})
     periphInit()
     while true do
-        altarManager()
+        waitForAll(altarManagement, recipeManagement)
         sleep(1)
     end
 end
