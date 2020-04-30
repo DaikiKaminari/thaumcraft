@@ -128,7 +128,7 @@ local function main()
     init({"lib/objectJSON", "recipeManager"})
     periphInit()
     while true do
-        waitForAll(altarManagement, recipeManagement)
+        parallel.waitForAll(altarManagement, recipeManagement)
         sleep(1)
     end
 end
