@@ -101,15 +101,18 @@ end
 
 -- manage the altar for autocrafting
 local function altarManagement()
-    -- if an item is present in input chest, then autocraft
-    if next(getItems(chest)) ~= nil then
-        local inputItems = getItems(chest)
-        local recipe = getRecipe()
-        if recipe == nil then
-            print("\nNo recipe found.")
-            return
+    while true do
+        if next(getItems(chest)) ~= nil then
+            print("\nAUTOCRAFT")
+            local inputItems = getItems(chest)
+            local recipe = getRecipe()
+            if recipe == nil then
+                print("\nNo recipe found.")
+                return
+            end
+            processItem(inputItems, recipe)
         end
-        processItem(inputItems, recipe)
+        sleep(1)
     end
 end
 
@@ -117,6 +120,7 @@ end
 local function recipeManagement()
     while true do
         if redstone.getInput(redstoneSide) then
+            print("\nRECIPE")
             recipeManager.saveRecipe(pedestals, centerPedestal)
         end
         sleep(0)
