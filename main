@@ -1,6 +1,9 @@
 --- CONFIG ---
-local centerPedestalName = "container_pedestal_12"
-local chestName = "tile_extrautils_chestfull_name_2"
+local centerPedestalName = "container_pedestal_12"  -- center pedestal peripheral name
+local chestName = "ender_chest_2"                   -- input chest peripheral name
+local redstoneSide = "top"                          -- side where the redstone is checked
+local centerChest = "north"                         -- direction of the input chest for center pedestal relative to the input chest
+local otherChest = "south"                          -- direction of the input chest for the others pedestals relative to the input chest
 
 --- GLOBAL VARIABLES ---
 local centerPedestal    -- table : peripheral - the center pedestal
@@ -50,39 +53,75 @@ local function init(apis)
 end
 
 --- UTILS ---
+local function getItems(chest)
+    local inputItems = {}
+    local item
+    for i=1,chest.getInventorySize() do
+        item = chest.getStackInSlot(i)
+        if item ~= nil then
+            inputItems[i] = item
+        end
+    end
+    return inputItems
+end
 
 --- FUNCTIONS ---
 -- manage the altar for autocrafting
 local function altarManager()
-
+    -- user ask to save a new recipe
+    if redstone.getInput("top") then
+        recipeManager.saveRecipe(pedestals, centerPedestal)
+    end
+    -- if an item is present in input chest, then autocraft
+    if getItems(chest) ~= nil then
+        local inputItems = getItems(chest)
+        local recipe = getRecipe()
+        processItem(inputItems, recipe)
+    end
 end
 
--- process an item in the altar
-local function processItem()
+-- add a new recipe
+local function getRecipe()
+    local inputItems = getItems(chest)
+    local matchingRecipe = recipeManager.getMatchingRecipe(inputItems)
+    if matchingRecipe == nil then
+        print("\nNo recipe found.")
+        return nil
+    end
+    return matchingRecipe
+end
 
+
+-- process an item in the altar
+local function processItem(inputItems, recipe)
+    print("\nPROCESS BEGIN")
+    for i,item in pairs(inputItems) do
+        if item.id == recipe.centerItem.id then
+            chest.pushItem(centerChest, i)
+        else
+            chest.pushItem(otherChest, i)
+        end
+    end
+    print("\nWAIT OUTPUT")
+    local centerItem = centerPedestal.getStackInSlot(1)
+    while centerItem ~= nil and centerItem.id ~= recipe.outputItem.id do
+        centerItem = centerPedestal.getStackInSlot(1)
+        sleep(0)
+    end
+    if centerItem == nil then
+        print("\nInfusion stopped by user.")
+    end
+    centerPedestal.pushItem("north", 1)
+    print("\nPROCESS END")
 end
 
 -- main call
 local function main()
     init({"lib/objectJSON", "recipeManager"})
     periphInit()
-
-    io.read()
-    recipeManager.saveRecipe(pedestals, centerPedestal)
-
-    local inputItems = {}
-    local item
-    for i=1,#chest.getInventorySize() do
-        item = chest.getStackInSlot(i)
-        if item ~= nil then
-            inputItems[#inputItems+1] = item
-        end
-    end
-    local r = recipeManager.getMatchingRecipe(inputItems)
-    if r == nil then
-        print("No recipe found.")
-    else
-        print(textutils.serialise(r))
+    while true do
+        altarManager()
+        sleep(1)
     end
 end
 
