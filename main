@@ -69,7 +69,7 @@ end
 -- add a new recipe
 local function getRecipe()
     local inputItems = getItems(chest)
-    return matchingRecipe = recipeManager.getMatchingRecipe(inputItems)
+    return recipeManager.getMatchingRecipe(inputItems)
 end
 
 -- process an item in the altar
@@ -97,35 +97,29 @@ end
 
 -- manage the altar for autocrafting
 local function altarManagement()
-    while true do
-        if next(getItems(chest)) ~= nil then
-            print("\nItems detected in input chest.")
-            local inputItems = getItems(chest)
-            print("Searching for matching recipe :")
-            local recipe = getRecipe()
-            if recipe == nil then
-                print("\n  No recipe found.")
-                return
-            end
-            print("\n  Recipe found.")
-            print("\nRECIPE :") -- TO REMOVE
-            print(tostring(matchingRecipe)) -- TO REMOVE
-            if type(matchingRecipe) == "table" then -- TO REMOVE
-                print(textutils.serialise(matchingRecipe)) -- TO REMOVE
-            end -- TO REMOVE
-            processItem(inputItems, recipe)
+    if next(getItems(chest)) ~= nil then
+        print("\nItems detected in input chest.")
+        local inputItems = getItems(chest)
+        print("Searching for matching recipe :")
+        local recipe = getRecipe()
+        if recipe == nil then
+            print("\n  No recipe found.")
+            return
         end
-        sleep(1)
+        print("\n  Recipe found.")
+        print("\nRECIPE :") -- TO REMOVE
+        print(tostring(matchingRecipe)) -- TO REMOVE
+        if type(matchingRecipe) == "table" then -- TO REMOVE
+            print(textutils.serialise(matchingRecipe)) -- TO REMOVE
+        end -- TO REMOVE
+        processItem(inputItems, recipe)
     end
 end
 
 -- manage recipes
 local function recipeManagement()
-    while true do
-        if redstone.getInput(redstoneSide) then
-            recipeManager.saveRecipe(pedestals, centerPedestal, redstoneSide)
-        end
-        sleep(0)
+    if redstone.getInput(redstoneSide) then
+        recipeManager.saveRecipe(pedestals, centerPedestal, redstoneSide)
     end
 end
 
@@ -135,7 +129,7 @@ local function main()
     periphInit()
     while true do
         parallel.waitForAll(altarManagement, recipeManagement)
-        sleep(1)
+        sleep(0)
     end
 end
 
