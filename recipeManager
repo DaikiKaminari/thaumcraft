@@ -91,7 +91,8 @@ function getMatchingRecipe(inputItems)
 end
 
 --- FUNCTIONS ---
-function saveRecipe(pedestals, centerPedestal)
+function saveRecipe(pedestals, centerPedestal, redstoneSide)
+    print("\nAdding recipe process begin.")
     local inputItems = getAltarItems(pedestals)
     local centerItem = getPedestalItem(centerPedestal)
     if inputItems == nil or next(inputItems) == {} or centerItem == nil then
@@ -100,13 +101,17 @@ function saveRecipe(pedestals, centerPedestal)
     end
     -- case recipe already exists
     if isRecipePresent(centerItem) then
+        redstone.setOutput(redstoneSide, true)
         print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
         if io.read():lower() ~= "yes" then
             print("\nRecipe not edited or deleted.")
+            redstone.setOutput(redstoneSide, false)
             return
         end
+        redstone.setOutput(redstoneSide, false)
     end
 
+    print("Waiting the end of the infusion.")
     local timeout = 0
     local outputItem = getPedestalItem(centerPedestal)
     while outputItem == nil or outputItem.id == centerItem.id  do
@@ -132,5 +137,5 @@ function saveRecipe(pedestals, centerPedestal)
     recipes[#recipes + 1] = newItem
 
     objectJSON.encodeAndSavePretty("recipes", recipes)
-    print("\nSuccessfully added recipe.")
+    print("Successfully added recipe.")
 end

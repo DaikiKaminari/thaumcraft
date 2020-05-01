@@ -69,16 +69,12 @@ end
 -- add a new recipe
 local function getRecipe()
     local inputItems = getItems(chest)
-    local matchingRecipe = recipeManager.getMatchingRecipe(inputItems)
-    if matchingRecipe == nil then
-        return nil
-    end
-    return matchingRecipe
+    return matchingRecipe = recipeManager.getMatchingRecipe(inputItems)
 end
 
 -- process an item in the altar
 local function processItem(inputItems, recipe)
-    print("\nPROCESS BEGIN")
+    print("\nProcess begin.")
     for i,item in pairs(inputItems) do
         if item.id == recipe.centerItem.id then
             chest.pushItem(centerChest, i)
@@ -86,7 +82,7 @@ local function processItem(inputItems, recipe)
             chest.pushItem(otherChest, i)
         end
     end
-    print("\nWAIT OUTPUT")
+    print("Wait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
     while centerItem ~= nil or centerItem.id ~= recipe.outputItem.id do
         centerItem = centerPedestal.getStackInSlot(1)
@@ -96,20 +92,27 @@ local function processItem(inputItems, recipe)
         print("\nInfusion stopped by user.")
     end
     centerPedestal.pushItem("north", 1)
-    print("\nPROCESS END")
+    print("\nSuccesfully finished infusion")
 end
 
 -- manage the altar for autocrafting
 local function altarManagement()
     while true do
         if next(getItems(chest)) ~= nil then
-            print("\nAUTOCRAFT")
+            print("\nItems detected in input chest.")
             local inputItems = getItems(chest)
+            print("Searching for matching recipe :")
             local recipe = getRecipe()
             if recipe == nil then
-                print("\nNo recipe found.")
+                print("\n  No recipe found.")
                 return
             end
+            print("\n  Recipe found.")
+            print("\nRECIPE :") -- TO REMOVE
+            print(tostring(matchingRecipe)) -- TO REMOVE
+            if type(matchingRecipe) == "table" then -- TO REMOVE
+                print(textutils.serialise(matchingRecipe)) -- TO REMOVE
+            end -- TO REMOVE
             processItem(inputItems, recipe)
         end
         sleep(1)
@@ -120,8 +123,7 @@ end
 local function recipeManagement()
     while true do
         if redstone.getInput(redstoneSide) then
-            print("\nRECIPE")
-            recipeManager.saveRecipe(pedestals, centerPedestal)
+            recipeManager.saveRecipe(pedestals, centerPedestal, redstoneSide)
         end
         sleep(0)
     end
