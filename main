@@ -84,7 +84,11 @@ local function processItem(inputItems, recipe)
     end
     print("Wait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
+    print("EXPECTED ITEM :") -- TO REMOVE
+    print(recipe.outputItem.id) -- TO REMOVE
+    print("CENTER ITEM : ") -- TO REMOVE
     while centerItem ~= nil or centerItem.id ~= recipe.outputItem.id do
+        print(centerItem.id) -- TO REMOVE
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
