@@ -75,6 +75,8 @@ end
 -- process an item in the altar
 local function processItem(inputItems, recipe)
     print("\nProcess begin.")
+    print("Expected output item :")
+    print(recipe.outputItem.display_name)
     for i,item in pairs(inputItems) do
         if item.id == recipe.centerItem.id then
             chest.pushItem(centerChest, i)
@@ -84,11 +86,7 @@ local function processItem(inputItems, recipe)
     end
     print("Wait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
-    print("EXPECTED ITEM :") -- TO REMOVE
-    print(recipe.outputItem.id) -- TO REMOVE
-    print("CENTER ITEM : ") -- TO REMOVE
-    while centerItem ~= nil or centerItem.id ~= recipe.outputItem.id do
-        print(centerItem.id) -- TO REMOVE
+    while centerItem == nil or centerItem.id ~= recipe.outputItem.id do
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
@@ -107,10 +105,10 @@ local function altarManagement()
         print("Searching for matching recipe :")
         local recipe = getRecipe()
         if recipe == nil then
-            print("\n  No recipe found.")
+            print("  No recipe found.")
             return
         end
-        print("\n  Recipe found.")
+        print("  Recipe found.")
         print("\nRECIPE :") -- TO REMOVE
         print(tostring(matchingRecipe)) -- TO REMOVE
         if type(matchingRecipe) == "table" then -- TO REMOVE
@@ -137,4 +135,26 @@ local function main()
     end
 end
 
-main()
+--main()
+
+local function test()
+    init({"lib/objectJSON", "recipeManager"})
+    periphInit()
+    while true do
+        if next(chest.getAllStacks()) ~= nil then
+            local recipe = getRecipe()
+            if type(recipe) == "table" then
+                print("YES")
+                print(textutils.serialise(recipe))
+            else
+                print("NO")
+                print(tostring(recipe))
+            end
+        else
+            print("nothing")
+        end
+        sleep(0)
+    end
+end
+
+test()
