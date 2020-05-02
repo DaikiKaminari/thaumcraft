@@ -9,13 +9,22 @@ local otherChest = "south"                          -- direction of the input ch
 local centerPedestal    -- table : peripheral - the center pedestal
 local pedestals = {}    -- table : peripherals - all pedestals
 local chest             -- table : peripheral - input chest
+local mon               -- table : peripheral - monitor (optional)
 
 --- INIT ---
 local function periphInit()
+    local mon = peripheral.find("monitor")
+    if mon == nil then
+        print("No monitor have been found.")
+    else
+        term.redirect(mon)
+    end
+
     centerPedestal = peripheral.wrap(centerPedestalName)
     if centerPedestal == nil then
         error("Center pedestal missing or wrong config : [" .. centerPedestalName .. "]")
     end
+
     local i = 1
     for _,v in pairs(peripheral.getNames()) do
         if v:find("container_pedestal") ~= nil then
@@ -26,6 +35,7 @@ local function periphInit()
     if #pedestals < 12 then
         error("Missing pedestals, only [" .. tostring(#pedestals) .. "] were found.")
     end
+
     chest = peripheral.wrap(chestName)
     if chest == nil then
         error("Chest missing or wrong config : [" .. chestName .. "].")
@@ -130,31 +140,14 @@ local function main()
     init({"lib/objectJSON", "recipeManager"})
     periphInit()
     while true do
+        term.clear()
+        print("Waiting for any action to be performed :")
+        print("  - Autocrafting (items in input chest)")
+        print("  - Adding recipe (puting items on altar and pressing the button)")
+        print("\n")
         parallel.waitForAll(altarManagement, recipeManagement)
         sleep(0)
     end
 end
 
---main()
-
-local function test()
-    init({"lib/objectJSON", "recipeManager"})
-    periphInit()
-    while true do
-        if next(chest.getAllStacks()) ~= nil then
-            local recipe = getRecipe()
-            if type(recipe) == "table" then
-                print("YES")
-                print(textutils.serialise(recipe))
-            else
-                print("NO")
-                print(tostring(recipe))
-            end
-        else
-            print("nothing")
-        end
-        sleep(0)
-    end
-end
-
-test()
+main()
