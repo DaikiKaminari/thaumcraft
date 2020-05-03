@@ -119,11 +119,7 @@ function saveRecipe(pedestals, centerPedestal, redstoneSide)
             print("\nAdding recipe cancelled by user.")
             return
         end
-        if outputItem == nil then
-            timeout = timeout + 1
-        else
-            timeout = 0
-        end
+        timeout = if centerItem == nil then timeout + 1 else 0 end
         sleep(1)
         outputItem = getPedestalItem(centerPedestal)
     end    

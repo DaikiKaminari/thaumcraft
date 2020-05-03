@@ -96,7 +96,12 @@ local function processItem(inputItems, recipe)
     end
     print("Wait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
-    while centerItem ~= nil and centerItem.id ~= recipe.outputItem.id and centerItem.dmg ~= recipe.outputItem.dmg do
+    local timeout = 0
+    while centerItem == nil or (centerItem.id ~= recipe.outputItem.id and centerItem.dmg ~= recipe.outputItem.dmg) do
+        if timeout >= 3 then
+            print("\nInfusion stopped by user.")
+        end
+        timeout = if centerItem == nil then timeout + 1 else 0 end
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
