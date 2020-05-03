@@ -96,7 +96,7 @@ local function processItem(inputItems, recipe)
     end
     print("Wait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
-    while centerItem == nil or (centerItem.id == recipe.outputItem.id and centerItem.dmg == recipe.outputItem.dmg) do
+    while centerItem ~= nil and centerItem.id ~= recipe.outputItem.id and centerItem.dmg ~= recipe.outputItem.dmg do
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
@@ -136,11 +136,9 @@ local function main()
     init({"lib/objectJSON", "recipeManager"})
     periphInit()
     while true do
-        term.clear()
-        print("Waiting for any action to be performed :")
+        print("\nWaiting for any action to be performed :")
         print("  - Autocrafting (items in input chest)")
         print("  - Adding recipe (puting items on altar and pressing the button)")
-        print("\n")
         parallel.waitForAll(altarManagement, recipeManagement)
         sleep(0)
     end
