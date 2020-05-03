@@ -1,0 +1,18 @@
+term.clear()
+
+if not fs.exists("lib/objectJSON") then
+    error("File does not exist : [lib/json]")
+end
+os.loadAPI("lib/objectJSON")
+objectJSON.init()
+
+if not fs.exists("recipes") then
+    error("File does not exist : [recipes]")
+end
+
+local recipes = objectJSON.decodeFromFile("recipes")
+for k,v in pairs(recipes) do
+    if k == "outputItem" then
+        print(v.display_name)
+    end
+end

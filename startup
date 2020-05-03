@@ -132,6 +132,7 @@ end
 local function recipeManagement()
     if redstone.getInput(redstoneSide) then
         recipeManager.saveRecipe(pedestals, centerPedestal, redstoneSide)
+        sleep(3)
     end
 end
 
