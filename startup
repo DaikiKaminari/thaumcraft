@@ -94,11 +94,11 @@ local function processItem(inputItems, recipe)
             chest.pushItem(otherChest, i)
         end
     end
-    print("Wait infusion is finished")
+    print("\nWait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
     local timeout = 0
     while centerItem == nil or (centerItem.id ~= recipe.outputItem.id and centerItem.dmg ~= recipe.outputItem.dmg) do
-        if timeout >= 3 then
+        if timeout >= 100 then
             print("\nInfusion stopped by user.")
             return
         end
