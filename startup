@@ -135,10 +135,10 @@ end
 local function main()
     init({"lib/objectJSON", "recipeManager"})
     periphInit()
+    print("\nWaiting for any action to be performed :")
+    print("  - Autocrafting (items in input chest)")
+    print("  - Adding recipe (puting items on altar and pressing the button)")
     while true do
-        print("\nWaiting for any action to be performed :")
-        print("  - Autocrafting (items in input chest)")
-        print("  - Adding recipe (puting items on altar and pressing the button)")
         parallel.waitForAll(altarManagement, recipeManagement)
         sleep(0)
     end
