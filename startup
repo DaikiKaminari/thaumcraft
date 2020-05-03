@@ -1,7 +1,7 @@
 --- CONFIG ---
 local centerPedestalName = "container_pedestal_12"  -- center pedestal peripheral name
 local chestName = "ender_chest_2"                   -- input chest peripheral name
-local redstoneSide = "top"                          -- side where the redstone is checked
+local redstoneSide = "front"                        -- side where the redstone is checked
 local centerChest = "north"                         -- direction of the input chest for center pedestal relative to the input chest
 local otherChest = "south"                          -- direction of the input chest for the others pedestals relative to the input chest
 

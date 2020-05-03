@@ -12,7 +12,5 @@ end
 
 local recipes = objectJSON.decodeFromFile("recipes")
 for k,v in pairs(recipes) do
-    if k == "outputItem" then
-        print(v.display_name)
-    end
+    print(v.outputItem.display_name)
 end
