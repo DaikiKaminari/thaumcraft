@@ -106,10 +106,6 @@ local function processItem(inputItems, recipe)
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
-    print(centerItem.id)
-    print(centerItem.dmg)
-    print(recipe.outputItem.id)
-    print(recipe.outputItem.dmg)
     centerPedestal.pushItem("north", 1)
     print("\nSuccesfully finished infusion.")
 end
