@@ -96,7 +96,7 @@ local function processItem(inputItems, recipe)
     end
     print("Wait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
-    while centerItem == nil or centerItem.id ~= recipe.outputItem.id do
+    while centerItem == nil or (centerItem.id == recipe.outputItem.id and centerItem.dmg == recipe.outputItem.dmg) do
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
@@ -119,11 +119,6 @@ local function altarManagement()
             return
         end
         print("  Recipe found.")
-        print("\nRECIPE :") -- TO REMOVE
-        print(tostring(matchingRecipe)) -- TO REMOVE
-        if type(matchingRecipe) == "table" then -- TO REMOVE
-            print(textutils.serialise(matchingRecipe)) -- TO REMOVE
-        end -- TO REMOVE
         processItem(inputItems, recipe)
     end
 end
