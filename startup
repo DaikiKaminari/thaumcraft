@@ -1,7 +1,8 @@
 --- CONFIG ---
 local centerPedestalName = "container_pedestal_12"  -- center pedestal peripheral name
 local chestName = "ender_chest_2"                   -- input chest peripheral name
-local redstoneSide = "front"                        -- side where the redstone is checked
+local redstoneSide = "front"                        -- side where the redstone is checked to add a recipe
+local displayRecipesSide = "left"                   -- side where the redstone is checked to display recipe list
 local centerChest = "north"                         -- direction of the input chest for center pedestal relative to the input chest
 local otherChest = "south"                          -- direction of the input chest for the others pedestals relative to the input chest
 
@@ -131,6 +132,14 @@ local function recipeManagement()
     if redstone.getInput(redstoneSide) then
         recipeManager.saveRecipe(pedestals, centerPedestal, redstoneSide)
         sleep(3)
+    end
+    if redstone.getInput(displayRecipesSide) then
+        if not fs.exists("displayRecipes") then
+            print("File not found : [displayRecipes].")
+        end
+        shell.run("displayRecipes")
+        io.read()
+        term.clear()
     end
 end
 
