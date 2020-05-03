@@ -114,7 +114,7 @@ function saveRecipe(pedestals, centerPedestal, redstoneSide)
     print("Waiting the end of the infusion.")
     local timeout = 0
     local outputItem = getPedestalItem(centerPedestal)
-    while outputItem == nil or (outputItem.id == centerItem.id and outputItem.dmg == centerItem.dmg) do
+    while outputItem == nil or outputItem.id ~= centerItem.id or outputItem.dmg ~= centerItem.dmg do
         if timeout >= 3 then
             print("\nAdding recipe cancelled by user.")
             return
