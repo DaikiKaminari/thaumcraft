@@ -100,11 +100,9 @@ local function processItem(inputItems, recipe)
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
-    if centerItem == nil then
-        print("\nInfusion stopped by user.")
-    end
+    sleep(1)
     centerPedestal.pushItem("north", 1)
-    print("\nSuccesfully finished infusion")
+    print("\nSuccesfully finished infusion.")
 end
 
 -- manage the altar for autocrafting
