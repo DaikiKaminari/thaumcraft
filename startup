@@ -102,7 +102,7 @@ local function processItem(inputItems, recipe)
             print("\nInfusion stopped by user.")
             return
         end
-        timeout = if centerItem == nil then timeout + 1 else 0 end
+        timeout = (centerItem == nil) and timeout + 1 or 0
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
