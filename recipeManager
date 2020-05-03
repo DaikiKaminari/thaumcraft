@@ -36,7 +36,7 @@ end
 local function isRecipePresent(centerItem)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
-        if r["centerItem"].id == centerItem.id and r["centerItem"].dmg == centerItem.dmg then
+        if r.centerItem.id == centerItem.id and r.centerItem.dmg == centerItem.dmg then
             return true
         end
     end
