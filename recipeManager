@@ -33,16 +33,6 @@ local function getRecipes()
     return recipes
 end
 
-local function isRecipePresent(centerItem)
-    local recipes = getRecipes()
-    for _,r in pairs(recipes) do
-        if isIdentical(r, centerItem) then
-            return true
-        end
-    end
-    return false
-end
-
 local function isIdentical(tab1, tab2)
     for _,v1 in pairs(tab1) do
         local matching = false
@@ -69,6 +59,16 @@ local function isIdentical(tab1, tab2)
     end
 
     return true
+end
+
+local function isRecipePresent(centerItem)
+    local recipes = getRecipes()
+    for _,r in pairs(recipes) do
+        if isIdentical(r, centerItem) then
+            return true
+        end
+    end
+    return false
 end
 
 function getMatchingRecipe(inputItems)
