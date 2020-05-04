@@ -150,18 +150,13 @@ local function processItem(inputItems, recipe)
         -- check if aspects are decresing
         local isDifferent = false
         newAspects = getAspects()
-        print("NEW ASPECTS :")
-        print(textutils.serialise(newAspects))
-        print(i)
         isDifferent = next(newAspects) == nil
-        print("IS DIFFERENT 1 : " .. tostring(isDifferent))
         for k,v in pairs(newAspects) do
             if newAspects[k] ~= aspect[k] then
                 isDifferent = true
                 break
             end
         end
-        print("IS DIFFERENT 2 : " .. tostring(isDifferent))
         if isDifferent then
             lackAspects = 0
             redstone.setOutput(alarmSide, false)
