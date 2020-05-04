@@ -141,7 +141,7 @@ local function processItem(inputItems, recipe)
         -- if no aspect are coming for a certain time
         if lackAspects == 100 then
             print("\nWarning : lack of aspects !")
-            redstone.output(alarmSide, true)
+            redstone.setOutput(alarmSide, true)
         end
 
         -- check if aspects are decresing
@@ -149,13 +149,13 @@ local function processItem(inputItems, recipe)
         local isDifferent = false
         for k,v in pairs(newAspects) do
             if newAspects[k] ~= aspect[k] then
-                isDifferent == true
+                isDifferent = true
                 break
             end
         end
         if isDifferent then
             lackAspects = 0
-            redstone.output(alarmSide, false)
+            redstone.setOutput(alarmSide, false)
         else
             lackAspects = lackAspects + 1
         end
@@ -180,7 +180,7 @@ local function altarManagement()
         end
         print("  Recipe found.")
         processItem(inputItems, recipe)
-        redstone.output(alarmSide, false)
+        redstone.setOutput(alarmSide, false)
         instructions()
     end
 end
