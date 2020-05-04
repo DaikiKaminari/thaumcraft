@@ -127,7 +127,7 @@ local function processItem(inputItems, recipe)
     print("\nWait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
     local aspects = {}
-    local newAspects = {"diff"}
+    local newAspects = {}
     local timeout = 0
     local lackAspects = 0
     while centerItem == nil or centerItem.id ~= recipe.outputItem.id or centerItem.dmg ~= recipe.outputItem.dmg do
@@ -146,9 +146,12 @@ local function processItem(inputItems, recipe)
 
         -- check if aspects are decresing
         newAspects = getAspects()
+        if #newAspects == 0 then
+            isDifferent = true
+        end
         local isDifferent = false
         for k,v in pairs(newAspects) do
-            if newAspects[k] ~= aspect[k] then
+            if not next(newAspects) and newAspects[k] ~= aspect[k] then
                 isDifferent = true
                 break
             end
