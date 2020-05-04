@@ -140,7 +140,8 @@ local function processItem(inputItems, recipe)
         timeout = (centerItem == nil) and timeout + 1 or 0
 
         -- if no aspect are coming for a certain time
-        if lackAspects == 100 then
+        print("LACK : " .. tostring(lackAspects))
+        if lackAspects >= 100 then
             print("\nWarning : lack of aspects !")
             redstone.setOutput(alarmSide, true)
         end
@@ -148,6 +149,8 @@ local function processItem(inputItems, recipe)
         -- check if aspects are decresing
         local isDifferent = false
         newAspects = getAspects()
+        print("NEW ASPECTS :")
+        print(textutils.serialise(newAspects))
         if #newAspects == 0 then
             isDifferent = true
         end
@@ -157,6 +160,7 @@ local function processItem(inputItems, recipe)
                 break
             end
         end
+        print("IS DIFFERENT : " .. tostring(isDifferent))
         if isDifferent then
             lackAspects = 0
             redstone.setOutput(alarmSide, false)
