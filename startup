@@ -146,6 +146,8 @@ local function processItem(inputItems, recipe)
 
         -- check if aspects are decresing
         newAspects = getAspects()
+        print(textutils.serialise(newAspects))
+        print(#newAspects)
         if #newAspects == 0 then
             isDifferent = true
         end
@@ -207,6 +209,7 @@ end
 
 -- main call
 local function main()
+    redstone.setOutput(alarmSide, false)
     init({"lib/objectJSON", "recipeManager"})
     periphInit()
     instructions()
