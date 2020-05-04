@@ -145,13 +145,11 @@ local function processItem(inputItems, recipe)
         end
 
         -- check if aspects are decresing
+        local isDifferent = false
         newAspects = getAspects()
-        print(textutils.serialise(newAspects))
-        print(#newAspects)
         if #newAspects == 0 then
             isDifferent = true
         end
-        local isDifferent = false
         for k,v in pairs(newAspects) do
             if not next(newAspects) and newAspects[k] ~= aspect[k] then
                 isDifferent = true
@@ -164,6 +162,7 @@ local function processItem(inputItems, recipe)
         else
             lackAspects = lackAspects + 1
         end
+        aspect = newAspects
 
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
