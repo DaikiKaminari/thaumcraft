@@ -141,7 +141,6 @@ local function processItem(inputItems, recipe)
         timeout = (centerItem == nil) and timeout + 1 or 0
 
         -- if no aspect are coming for a certain time
-        print("LACK : " .. tostring(lackAspects))
         if lackAspects >= 100 then
             print("\nWarning : lack of aspects !")
             redstone.setOutput(alarmSide, true)
