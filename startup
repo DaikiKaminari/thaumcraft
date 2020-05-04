@@ -152,6 +152,8 @@ local function processItem(inputItems, recipe)
         isDifferent = next(newAspects) == nil
         local allZero = false
         for k,v in pairs(newAspects) do
+            print(type(v))
+            print(v)
             if v ~= 0 then
                 allZero = true
             end
