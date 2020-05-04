@@ -49,6 +49,7 @@ local function periphInit()
     if chest == nil then
         error("Chest missing or wrong config : [" .. chestName .. "].")
     end
+    sleep(2)
 end
 
 -- Load apis and execute init() method if it exists
@@ -106,7 +107,7 @@ local function getAspects()
         return {}
     end
     local aspects = {}
-    for _,aspect in pairs(matrix.getAspects()) do
+    for _,v in pairs(matrix.getAspects()) do
         aspects[v] = matrix.getAspectCount(v)
     end
     return aspects
