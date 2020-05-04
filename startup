@@ -107,6 +107,7 @@ local function getAspects()
         return {}
     end
     local aspects = {}
+    local i = 0
     for _,v in pairs(matrix.getAspects()) do
         aspects[v] = matrix.getAspectCount(v)
     end
@@ -128,7 +129,7 @@ local function processItem(inputItems, recipe)
     print("\nWait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
     local aspects = {}
-    local newAspects = {}
+    local newAspects
     local timeout = 0
     local lackAspects = 0
     while centerItem == nil or centerItem.id ~= recipe.outputItem.id or centerItem.dmg ~= recipe.outputItem.dmg do
@@ -151,8 +152,8 @@ local function processItem(inputItems, recipe)
         newAspects = getAspects()
         print("NEW ASPECTS :")
         print(textutils.serialise(newAspects))
-        print(#newAspects)
-        isDifferent = #newAspects == 0
+        print(i)
+        isDifferent = next(newAspects) == nil
         print("IS DIFFERENT 1 : " .. tostring(isDifferent))
         for k,v in pairs(newAspects) do
             if newAspects[k] ~= aspect[k] then
