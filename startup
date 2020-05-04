@@ -150,12 +150,10 @@ local function processItem(inputItems, recipe)
         local isDifferent = false
         newAspects = getAspects()
         isDifferent = next(newAspects) == nil
-        local allZero = false
+        local allZero = true
         for k,v in pairs(newAspects) do
-            print(type(v))
-            print(v)
             if v ~= 0 then
-                allZero = true
+                allZero = false
             end
             if v ~= aspect[k] then
                 isDifferent = true
