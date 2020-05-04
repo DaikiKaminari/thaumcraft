@@ -104,12 +104,15 @@ end
 -- returns a table contaning as key aspects needed for the craft, and as value the number of it
 local function getAspects()
     if matrix == nil then
+        print("NO MATRIX") -- TO REMOVE
         return {}
     end
     local aspects = {}
     for _,v in pairs(matrix.getAspects()) do
         aspects[v] = matrix.getAspectCount(v)
     end
+    print("ASPECTS : " .. tostring(aspects))
+    print(textutils.serialise(aspects))
     return aspects
 end
 
