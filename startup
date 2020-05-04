@@ -5,6 +5,7 @@ local redstoneSide = "front"                        -- side where the redstone i
 local displayRecipesSide = "left"                   -- side where the redstone is checked to display recipe list
 local centerChest = "north"                         -- direction of the input chest for center pedestal relative to the input chest
 local otherChest = "south"                          -- direction of the input chest for the others pedestals relative to the input chest
+local outputChest = "west"                          -- direction of the output chest
 
 --- GLOBAL VARIABLES ---
 local centerPedestal    -- table : peripheral - the center pedestal
@@ -116,7 +117,7 @@ local function processItem(inputItems, recipe)
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
-    centerPedestal.pushItem("north", 1)
+    centerPedestal.pushItem(outputChest, 1)
     print("\nSuccesfully finished infusion.")
 end
 
