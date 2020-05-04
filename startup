@@ -152,7 +152,7 @@ local function processItem(inputItems, recipe)
         newAspects = getAspects()
         isDifferent = next(newAspects) == nil
         for k,v in pairs(newAspects) do
-            if newAspects[k] ~= aspect[k] then
+            if newAspects[k] ~= 0 and newAspects[k] ~= aspect[k] then
                 isDifferent = true
                 break
             end
