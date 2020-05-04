@@ -3,6 +3,7 @@ local centerPedestalName = "container_pedestal_12"  -- center pedestal periphera
 local chestName = "ender_chest_2"                   -- input chest peripheral name
 local redstoneSide = "front"                        -- side where the redstone is checked to add a recipe
 local displayRecipesSide = "left"                   -- side where the redstone is checked to display recipe list
+local alarmSide = "top"                             -- alarm side in case there is a lack of aspects
 local centerChest = "north"                         -- direction of the input chest for center pedestal relative to the input chest
 local otherChest = "south"                          -- direction of the input chest for the others pedestals relative to the input chest
 local outputChest = "west"                          -- direction of the output chest
@@ -12,6 +13,7 @@ local centerPedestal    -- table : peripheral - the center pedestal
 local pedestals = {}    -- table : peripherals - all pedestals
 local chest             -- table : peripheral - input chest
 local mon               -- table : peripheral - monitor (optional)
+local matrix            -- table : peripheral - matrix (optional)
 
 --- INIT ---
 local function periphInit()
@@ -20,6 +22,11 @@ local function periphInit()
         print("No monitor have been found.")
     else
         term.redirect(mon)
+    end
+
+    local matrix = peripheral.find("tt_aspectContainer")
+    if matrix == nil then
+        print("No matrix have been found.")
     end
 
     centerPedestal = peripheral.wrap(centerPedestalName)
@@ -65,6 +72,7 @@ local function init(apis)
 end
 
 --- UTILS ---
+-- returns a table containing all items present in chest
 local function getItems(chest)
     local inputItems = {}
     local item
@@ -77,7 +85,6 @@ local function getItems(chest)
     return inputItems
 end
 
--- print text
 local function instructions()
     term.clear()
     print("\nWaiting for any action to be performed :")
@@ -87,10 +94,22 @@ local function instructions()
 end
 
 --- FUNCTIONS ---
--- add a new recipe
+-- returns a recipe marching items present in the input chest
 local function getRecipe()
     local inputItems = getItems(chest)
     return recipeManager.getMatchingRecipe(inputItems)
+end
+
+-- returns a table contaning as key aspects needed for the craft, and as value the number of it
+local function getAspects()
+    if matrix == nil then
+        return {}
+    end
+    local aspects = {}
+    for _,aspect in pairs(matrix.getAspects()) do
+        aspects[v] = matrix.getAspectCount(v)
+    end
+    return aspects
 end
 
 -- process an item in the altar
@@ -107,13 +126,40 @@ local function processItem(inputItems, recipe)
     end
     print("\nWait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
+    local aspects = {}
+    local newAspects = {"diff"}
     local timeout = 0
+    local lackAspects = 0
     while centerItem == nil or centerItem.id ~= recipe.outputItem.id or centerItem.dmg ~= recipe.outputItem.dmg do
+        -- if center item is not present for a certain time
         if timeout >= 100 then
             print("\nInfusion stopped by user.")
             return
         end
         timeout = (centerItem == nil) and timeout + 1 or 0
+
+        -- if no aspect are coming for a certain time
+        if lackAspects == 100 then
+            print("\nWarning : lack of aspects !")
+            redstone.output(alarmSide, true)
+        end
+
+        -- check if aspects are decresing
+        newAspects = getAspects()
+        local isDifferent = false
+        for k,v in pairs(newAspects) do
+            if newAspects[k] ~= aspect[k] then
+                isDifferent == true
+                break
+            end
+        end
+        if isDifferent then
+            lackAspects = 0
+            redstone.output(alarmSide, false)
+        else
+            lackAspects = lackAspects + 1
+        end
+
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
     end
@@ -134,6 +180,7 @@ local function altarManagement()
         end
         print("  Recipe found.")
         processItem(inputItems, recipe)
+        redstone.output(alarmSide, false)
         instructions()
     end
 end
