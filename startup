@@ -86,6 +86,13 @@ local function getItems(chest)
     return inputItems
 end
 
+local function displayRecipes()
+    term.clear()
+    for _,r in pairs(recipeManagement.getRecipes()) do
+        print(r.outputItem.display_name .. " - " .. r.outputItem.dmg)
+    end
+end
+
 local function instructions()
     term.clear()
     print("\nWaiting for any action to be performed :")
@@ -207,10 +214,7 @@ local function recipeManagement()
         sleep(3)
     end
     if redstone.getInput(displayRecipesSide) then
-        if not fs.exists("displayRecipes") then
-            print("File not found : [displayRecipes].")
-        end
-        shell.run("displayRecipes")
+        displayRecipes()
         io.read()
         term.clear()
         instructions()

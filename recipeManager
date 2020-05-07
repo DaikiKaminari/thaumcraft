@@ -25,7 +25,7 @@ local function getAltarItems(pedestals)
     return items
 end
 
-local function getRecipes()
+function getRecipes()
     local recipes = objectJSON.decodeFromFile("recipes")
     if recipes == nil then
         error("\nFailed to get recipes.")
@@ -34,7 +34,7 @@ local function getRecipes()
 end
 
 -- return true if two items are identical (match only dmg, id, number of items... but ignoring ore dictionnary, effects...)
-function isItemIdentical(item1, item2)
+local function isItemIdentical(item1, item2)
     local matching = true
     for k,v in pairs(item1) do
         if type(v) ~= "table" and k ~= "qty" then
@@ -55,7 +55,7 @@ function isItemIdentical(item1, item2)
     return matching
 end
 
-function isItemInList(item1, itemList)
+local function isItemInList(item1, itemList)
     for _,item2 in pairs(itemList) do
         if isItemIdentical(item1, item2) then
             return true
@@ -64,7 +64,7 @@ function isItemInList(item1, itemList)
     return false
 end
 
-function isItemListIdentical(items1, items2)
+local function isItemListIdentical(items1, items2)
     for _,item1 in pairs(items1) do
         if not isItemInList(item1, items2) then
             return false
