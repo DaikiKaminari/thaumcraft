@@ -37,7 +37,7 @@ end
 function isItemIdentical(item1, item2)
     local matching = true
     for k,v in pairs(item1) do
-        if type(v) ~= "table" then
+        if type(v) ~= "table" and k ~= "qty" then
             if v ~= item2[k] then
                 matching = false
                 break
@@ -76,9 +76,7 @@ end
 
 function getMatchingRecipe(inputItems)
     local recipes = getRecipes()
-    print(tostring(recipes))
     for _,r in pairs(recipes) do
-        print(r)
         if isItemListIdentical(r["inputItems"], inputItems) then
             return r
         end
