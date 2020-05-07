@@ -76,7 +76,15 @@ end
 
 function getMatchingRecipe(inputItems)
     local recipes = getRecipes()
-    for _,r in pairs(recipes) do
+    for k,r in pairs(recipes) do -- K TO REMOVE
+        if k == 1 then
+            local mon2 = peripheral.wrap("monitor_39")
+            mon2.clear()
+            print(textutils.serialise(r["inputItems"]))
+            local mon1 = peripheral.wrap("monitor_40")
+            mon1.clear()
+            print(textutils.serialise(inputItems))
+        end
         if isItemListIdentical(r["inputItems"], inputItems) then
             return r
         end
