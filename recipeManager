@@ -75,16 +75,10 @@ function isItemListIdentical(items1, items2)
 end
 
 function getMatchingRecipe(inputItems)
-    for k,r in pairs(getRecipes()) do -- K TO REMOVE
-        if k == 1 then
-            local mon1 = peripheral.wrap("monitor_39")
-            mon1.clear()
-            print(textutils.serialise(r["inputItems"]))
-            local mon2 = peripheral.wrap("monitor_40")
-            mon2.clear()
-            print(textutils.serialise(inputItems))
-            error("STOP")
-        end
+    local recipes = getRecipes()
+    print(tostring(recipes))
+    for _,r in pairs(recipes) do
+        print(r)
         if isItemListIdentical(r["inputItems"], inputItems) then
             return r
         end
