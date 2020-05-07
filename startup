@@ -155,7 +155,7 @@ local function processItem(inputItems, recipe)
             if v ~= 0 then
                 allZero = false
             end
-            if v ~= aspect[k] then
+            if v ~= aspects[k] then
                 isDifferent = true
                 break
             end
@@ -169,7 +169,7 @@ local function processItem(inputItems, recipe)
         else
             lackAspects = lackAspects + 1
         end
-        aspect = newAspects
+        aspects = newAspects
 
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
