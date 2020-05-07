@@ -77,7 +77,7 @@ end
 function getMatchingRecipe(inputItems)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
-        if isItemListIdentical(r.inputItems, inputItems) then
+        if isItemListIdentical(r["inputItems"], inputItems) then
             return r
         end
     end
