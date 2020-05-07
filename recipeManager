@@ -44,30 +44,29 @@ function isItemIdentical(item1, item2)
             end
         end
     end
-
     for k,v in pairs(item2) do
-        if type(v) ~= "table" then
+        if type(v) ~= "table" and k ~= "qty" then
             if v ~= item1[k] then
                 matching = false
                 break
             end
         end
     end
-
     return matching
 end
 
-function isItemListIdentical(items1, items2)
-    local allMatching = true
-    for _,item1 in pairs(items1) do
-        local matching = false
-        for _,item2 in pairs(items2) do
-            if isItemIdentical(item1, item2) then
-                matching = true
-                break
-            end
+function isItemInList(item1, itemList)
+    for _,item2 in pairs(itemList) do
+        if isItemIdentical(item1, item2) then
+            return true
         end
-        if not matching then
+    end
+    return false
+end
+
+function isItemListIdentical(items1, items2)
+    for _,item1 in pairs(items1) do
+        if not isItemInList(item1, items2) then
             return false
         end
     end
