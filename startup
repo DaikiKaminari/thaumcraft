@@ -132,7 +132,7 @@ local function processItem(inputItems, recipe)
     local newAspects
     local timeout = 0
     local lackAspects = 0
-    while centerItem == nil or (centerItem.id ~= recipe.outputItem.id and centerItem.dmg ~= recipe.outputItem.dmg) do
+    while centerItem == nil or centerItem.id ~= recipe.outputItem.id or centerItem.dmg ~= recipe.outputItem.dmg do
         -- if center item is not present for a certain time
         if timeout >= 100 then
             print("\nInfusion stopped by user.")

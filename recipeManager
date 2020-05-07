@@ -33,35 +33,26 @@ local function getRecipes()
     return recipes
 end
 
-local function isIdentical(tab1, tab2)
-    for _,v1 in pairs(tab1) do
-        local matching = false
-        for _,v2 in pairs(tab2) do
-            if v1 == v2 then
-                matching = true
-            end
-        end
-        if matching == false then
-            return false
+local function isIdentical(item1, item2)
+    local matching = true
+    for k,v in pairs(item1) do
+        if v ~= item2.k then
+            matching = false
+            break
         end
     end
 
-    for _,v1 in pairs(tab2) do
-        local matching = false
-        for _,v2 in pairs(tab1) do
-            if v1 == v2 then
-                matching = true
-            end
-        end
-        if matching == false then
-            return false
+    for k,v in pairs(item2) do
+        if v ~= item1.k then
+            matching = false
+            break
         end
     end
 
-    return true
+    return matching
 end
 
-local function isRecipePresent(centerItem)
+local function isRecipePresent(centerItem, other)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
         if isIdentical(r, centerItem) then
@@ -72,18 +63,9 @@ local function isRecipePresent(centerItem)
 end
 
 function getMatchingRecipe(inputItems)
-    local inputItemsID = {}
-    for _,item in pairs(inputItems) do
-        inputItemsID[#inputItemsID+1] = item.id
-    end
-
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
-        local itemsID = {}
-        for _,item in pairs(r.inputItems) do
-            itemsID[#itemsID+1] = item.id
-        end
-        if isIdentical(inputItemsID, itemsID) then
+        if isIdentical(r.inputItems, inputItems) then
             return r
         end
     end
