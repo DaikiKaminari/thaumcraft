@@ -33,19 +33,24 @@ local function getRecipes()
     return recipes
 end
 
-local function isIdentical(item1, item2)
+-- return true if two items are identical (match only dmg, id, number of items... but ignoring ore dictionnary, effects...)
+function isIdentical(item1, item2)
     local matching = true
     for k,v in pairs(item1) do
-        if v ~= item2.k then
-            matching = false
-            break
+        if type(v) ~= "table" then
+            if v ~= item2.k then
+                matching = false
+                break
+            end
         end
     end
 
     for k,v in pairs(item2) do
-        if v ~= item1.k then
-            matching = false
-            break
+        if type(v) ~= "table" then
+            if v ~= item1.k then
+                matching = false
+                break
+            end
         end
     end
 
