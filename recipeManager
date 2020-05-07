@@ -34,11 +34,11 @@ local function getRecipes()
 end
 
 -- return true if two items are identical (match only dmg, id, number of items... but ignoring ore dictionnary, effects...)
-function isIdentical(item1, item2)
+function isItemIdentical(item1, item2)
     local matching = true
     for k,v in pairs(item1) do
         if type(v) ~= "table" then
-            if v ~= item2.k then
+            if v ~= item2[k] then
                 matching = false
                 break
             end
@@ -47,7 +47,7 @@ function isIdentical(item1, item2)
 
     for k,v in pairs(item2) do
         if type(v) ~= "table" then
-            if v ~= item1.k then
+            if v ~= item1[k] then
                 matching = false
                 break
             end
@@ -57,20 +57,27 @@ function isIdentical(item1, item2)
     return matching
 end
 
-local function isRecipePresent(centerItem, other)
-    local recipes = getRecipes()
-    for _,r in pairs(recipes) do
-        if isIdentical(r, centerItem) then
-            return true
+function isItemListIdentical(items1, items2)
+    local allMatching = true
+    for _,item1 in pairs(items1) do
+        local matching = false
+        for _,item2 in pairs(items2) do
+            if isItemIdentical(item1, item2) then
+                matching = true
+                break
+            end
+        end
+        if not matching then
+            return false
         end
     end
-    return false
+    return true
 end
 
 function getMatchingRecipe(inputItems)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
-        if isIdentical(r.inputItems, inputItems) then
+        if isItemListIdentical(r.inputItems, inputItems) then
             return r
         end
     end
@@ -78,7 +85,7 @@ function getMatchingRecipe(inputItems)
 end
 
 --- FUNCTIONS ---
-function saveRecipe(pedestals, centerPedestal, redstoneSide)
+function saveRecipe(pedestals, centerPedestal)
     print("\nAdding recipe process begin.")
     local inputItems = getAltarItems(pedestals)
     local centerItem = getPedestalItem(centerPedestal)
@@ -87,15 +94,13 @@ function saveRecipe(pedestals, centerPedestal, redstoneSide)
         return
     end
     -- case recipe already exists
-    if isRecipePresent(centerItem) then
-        redstone.setOutput(redstoneSide, true)
-        print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
-        if io.read():lower() ~= "yes" then
-            print("\nRecipe not edited or deleted.")
-            redstone.setOutput(redstoneSide, false)
-            return
-        end
-        redstone.setOutput(redstoneSide, false)
+    if getMatchingRecipe(inputItems) ~= nil then
+        --print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
+        print("Recipe already existing !")
+        --if io.read():lower() ~= "yes" then
+        print("\nRecipe not edited or deleted.")
+        return
+        --end
     end
 
     print("Waiting the end of the infusion.")
