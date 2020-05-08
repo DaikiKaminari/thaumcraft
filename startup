@@ -88,13 +88,20 @@ end
 
 -- prints all available recipes
 local function displayRecipes()
-    term.clear()
+    -- get item list
     local items = {}
     for _,r in pairs(recipeManager.getRecipes()) do
         table.insert(items, r.outputItem.display_name .. " - " .. r.outputItem.dmg)
     end
+
+    -- display
+    term.clear()
+    local w,h = term.getSize()
     table.sort(items)
-    for _,v in ipairs(items) do
+    for k,v in ipairs(items) do
+        if k%h == 0 then
+            io.read()
+        end
         print(v)
     end
 end
