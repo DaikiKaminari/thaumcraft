@@ -86,13 +86,20 @@ local function getItems(chest)
     return inputItems
 end
 
+-- prints all available recipes
 local function displayRecipes()
     term.clear()
-    for _,r in pairs(recipeManagement.getRecipes()) do
-        print(r.outputItem.display_name .. " - " .. r.outputItem.dmg)
+    local items = {}
+    for _,r in pairs(recipeManager.getRecipes()) do
+        table.insert(items, r.outputItem.display_name .. " - " .. r.outputItem.dmg)
+    end
+    table.sort(items)
+    for _,v in ipairs(items) do
+        print(v)
     end
 end
 
+-- prints instructions on how to use the computer
 local function instructions()
     term.clear()
     print("\nWaiting for any action to be performed :")
