@@ -56,9 +56,9 @@ local function isItemIdentical(item1, item2)
 end
 
 local function isItemInList(item1, itemList)
-    for _,item2 in pairs(itemList) do
+    for k,item2 in pairs(itemList) do
         if isItemIdentical(item1, item2) then
-            return true
+            return k
         end
     end
     return false
@@ -71,6 +71,31 @@ local function isItemListIdentical(items1, items2)
         end
     end
     return true
+end
+
+local function compactItemList(itemList)
+    local newItemList = {}
+    for _,item in pairs(itemList) do
+        local i = isItemInList(item, newItemList)
+        if i then
+            newItemList[i]["qty"] = newItemList[i]["qty"] + 1
+        else
+            table.insert(newItemList, item)
+        end
+    end
+    return newItemList
+end
+
+function compactAllRecipes()
+    local newRecipes = {}
+    local recipes = getRecipes()
+    for k,r in pairs(recipes) do
+        newRecipes[k] = r
+        newRecipes[k]["inputItems"] = compactItemList(r["inputItems"])
+    end
+    if newRecipes == nil or next(newRecipes) == nil then
+        error("Compacting recipes failed.")
+    objectJSON.encodeAndSavePretty("newRecipes", newRecipes)
 end
 
 function getMatchingRecipe(inputItems)
