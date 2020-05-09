@@ -95,6 +95,7 @@ function compactAllRecipes()
     end
     if newRecipes == nil or next(newRecipes) == nil then
         error("Compacting recipes failed.")
+    end
     objectJSON.encodeAndSavePretty("newRecipes", newRecipes)
 end
 
@@ -145,10 +146,11 @@ function saveRecipe(pedestals, centerPedestal)
     local recipes = getRecipes()
 
     local newItem = {}
-    newItem["inputItems"] = inputItems
+    local compactedInputItems = compactItemList(inputItems)
+    newItem["inputItems"] = compactedInputItems
     newItem["centerItem"] = centerItem
     newItem["outputItem"] = outputItem
-    recipes[#recipes + 1] = newItem
+    table.insert(recipes, newItem)
 
     objectJSON.encodeAndSavePretty("recipes", recipes)
     print("Successfully added recipe.")

@@ -92,4 +92,5 @@ function encodeAndSavePretty(filename, obj)
 	local h = fs.open(filename, "w")
 	h.write(json.encodePretty(obj))
 	h.close()
+	print("Edited file [" .. filename .. "]")
 end
