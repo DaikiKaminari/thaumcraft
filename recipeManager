@@ -93,9 +93,11 @@ function saveRecipe(pedestals, centerPedestal)
         return
     end
     -- case recipe already exists
-    if getMatchingRecipe(inputItems) ~= nil then
+    local recipe = getMatchingRecipe(inputItems)
+    if recipe ~= nil then
         --print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
         print("Recipe already existing !")
+        print(" --> " .. recipe.outputItem.id .. " - " .. tostring(recipe.outputItem.dmg))
         --if io.read():lower() ~= "yes" then
         print("\nRecipe not edited or deleted.")
         return
