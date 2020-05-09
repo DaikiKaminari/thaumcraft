@@ -34,10 +34,10 @@ function getRecipes()
 end
 
 -- return true if two items are identical (match only dmg, id, number of items... but ignoring ore dictionnary, effects...)
-local function isItemIdentical(item1, item2)
+local function isItemIdentical(item1, item2, ignoreQty)
     local matching = true
     for k,v in pairs(item1) do
-        if type(v) ~= "table" and k ~= "qty" then
+        if type(v) ~= "table" and (not ignoreQty or k ~= "qty") then
             if v ~= item2[k] then
                 matching = false
                 break
@@ -45,7 +45,7 @@ local function isItemIdentical(item1, item2)
         end
     end
     for k,v in pairs(item2) do
-        if type(v) ~= "table" and k ~= "qty" then
+        if type(v) ~= "table" and (not ignoreQty or k ~= "qty") then
             if v ~= item1[k] then
                 matching = false
                 break
@@ -55,18 +55,18 @@ local function isItemIdentical(item1, item2)
     return matching
 end
 
-local function isItemInList(item1, itemList)
+local function isItemInList(item1, itemList, ignoreQty)
     for k,item2 in pairs(itemList) do
-        if isItemIdentical(item1, item2) then
+        if isItemIdentical(item1, item2, ignoreQty) then
             return k
         end
     end
     return false
 end
 
-local function isItemListIdentical(items1, items2)
+local function isItemListIdentical(items1, items2, ignoreQty)
     for _,item1 in pairs(items1) do
-        if not isItemInList(item1, items2) then
+        if not isItemInList(item1, items2, ignoreQty) then
             return false
         end
     end
@@ -76,7 +76,7 @@ end
 local function compactItemList(itemList)
     local newItemList = {}
     for _,item in pairs(itemList) do
-        local i = isItemInList(item, newItemList)
+        local i = isItemInList(item, newItemList, true)
         if i then
             newItemList[i]["qty"] = newItemList[i]["qty"] + 1
         else
@@ -102,7 +102,7 @@ end
 function getMatchingRecipe(inputItems)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
-        if isItemListIdentical(r["inputItems"], inputItems) then
+        if isItemListIdentical(r["inputItems"], inputItems, false) then
             return r
         end
     end
