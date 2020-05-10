@@ -122,7 +122,7 @@ function saveRecipe(pedestals, centerPedestal)
     local recipe = getMatchingRecipe(inputItems)
     if recipe ~= nil then
         --print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
-        print("Recipe already existing !")
+        print("Recipe already existing.")
         print(" --> " .. recipe.outputItem.id .. " - " .. tostring(recipe.outputItem.dmg))
         --if io.read():lower() ~= "yes" then
         print("\nRecipe not edited or deleted.")
@@ -148,6 +148,13 @@ function saveRecipe(pedestals, centerPedestal)
     end    
 
     local recipes = getRecipes()
+    for _,r in pairs(recipes) do
+        if isItemIdentical(r["outputItem"], outputItem) then
+            print("Recipe already existing : [" .. r.outputItem.display_name .. "]")
+            print("\nRecipe not edited or deleted.")
+            return
+        end
+    end
 
     local newItem = {}
     local compactedInputItems = compactItemList(inputItems)
