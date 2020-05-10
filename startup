@@ -122,19 +122,6 @@ local function getRecipe()
     return recipeManager.getMatchingRecipe(inputItems)
 end
 
--- returns a table contaning as key aspects needed for the craft, and as value the number of it
-local function getAspects()
-    if matrix == nil then
-        return {}
-    end
-    local aspects = {}
-    local i = 0
-    for _,v in pairs(matrix.getAspects()) do
-        aspects[v] = matrix.getAspectCount(v)
-    end
-    return aspects
-end
-
 -- process an item in the altar
 local function processItem(inputItems, recipe)
     print("\nProcess begin.")
@@ -149,10 +136,10 @@ local function processItem(inputItems, recipe)
     end
     print("\nWait infusion is finished")
     local centerItem = centerPedestal.getStackInSlot(1)
+    local lackAspects = 0
     local aspects = {}
     local newAspects
     local timeout = 0
-    local lackAspects = 0
     while centerItem == nil or centerItem.id ~= recipe.outputItem.id or centerItem.dmg ~= recipe.outputItem.dmg do
         -- if center item is not present for a certain time
         if timeout >= 100 then
@@ -161,36 +148,8 @@ local function processItem(inputItems, recipe)
         end
         timeout = (centerItem == nil) and timeout + 1 or 0
 
-        -- if no aspect are coming for a certain time
-        if lackAspects >= 100 then
-            print("\nWarning : lack of aspects !")
-            redstone.setOutput(alarmSide, true)
-        end
-
-        -- check if aspects are decresing
-        local isDifferent = false
-        newAspects = getAspects()
-        isDifferent = next(newAspects) == nil
-        local allZero = true
-        for k,v in pairs(newAspects) do
-            if v ~= 0 then
-                allZero = false
-            end
-            if v ~= aspects[k] then
-                isDifferent = true
-                break
-            end
-        end
-        if allZero then
-            isDifferent = true
-        end
-        if isDifferent then
-            lackAspects = 0
-            redstone.setOutput(alarmSide, false)
-        else
-            lackAspects = lackAspects + 1
-        end
-        aspects = newAspects
+        -- check if there is enouth aspects
+        lackAspects, aspects = recipeManager.checkAspects(lackAspects, aspects)
 
         centerItem = centerPedestal.getStackInSlot(1)
         sleep(0)
