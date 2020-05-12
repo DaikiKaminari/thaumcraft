@@ -34,7 +34,7 @@ function getRecipes()
 end
 
 -- return true if two items are identical (match only dmg, id, number of items... but ignoring ore dictionnary, effects...)
-local function isItemIdentical(item1, item2, ignoreQty)
+function isItemIdentical(item1, item2, ignoreQty)
     local matching = true
     for k,v in pairs(item1) do
         if type(v) ~= "table" and (not ignoreQty or k ~= "qty") then
