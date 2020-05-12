@@ -175,7 +175,7 @@ local function processItem(inputItems, recipe)
     print("Expected output item :")
     print(recipe.outputItem.display_name)
     for i,item in pairs(inputItems) do
-        if item.id == recipe.centerItem.id then
+        if recipeManager.isItemIdentical(item, recipe.centerItem, false) then
             chest.pushItem(centerChest, i)
         else
             chest.pushItem(otherChest, i)
