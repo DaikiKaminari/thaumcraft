@@ -37,7 +37,7 @@ end
 function isItemIdentical(item1, item2, ignoreQty)
     local matching = true
     for k,v in pairs(item1) do
-        if type(v) ~= "table" and (not ignoreQty or k ~= "qty") then
+        if type(v) ~= "table" and (ignoreQty or k ~= "qty") then
             if v ~= item2[k] then
                 matching = false
                 break
@@ -45,17 +45,13 @@ function isItemIdentical(item1, item2, ignoreQty)
         end
     end
     for k,v in pairs(item2) do
-        if type(v) ~= "table" and (not ignoreQty or k ~= "qty") then
+        if type(v) ~= "table" and (ignoreQty or k ~= "qty") then
             if v ~= item1[k] then
                 matching = false
                 break
             end
         end
     end
-    if item1.id == item2.id and item1.dmg == item2.dmg then
-        print(textutils.serialise(item1))
-        print(textutils.serialise(item2))
-        error()
     return matching
 end
 
