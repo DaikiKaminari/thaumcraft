@@ -70,6 +70,11 @@ local function isItemListIdentical(items1, items2, ignoreQty)
             return false
         end
     end
+    for _,item2 in pairs(items2) do
+        if not isItemInList(item2, items1, ignoreQty) then
+            return false
+        end
+    end
     return true
 end
 
