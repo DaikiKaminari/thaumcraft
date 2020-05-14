@@ -52,6 +52,10 @@ function isItemIdentical(item1, item2, ignoreQty)
             end
         end
     end
+    if item1.id == item2.id and item1.dmg == item2.dmg then
+        print(textutils.serialise(item1))
+        print(textutils.serialise(item2))
+        error()
     return matching
 end
 
