@@ -158,7 +158,7 @@ function saveRecipe(pedestals, centerPedestal)
                 -- case input items don't match any recipe but output match
                 print("Recipe already exists : [" .. r.outputItem.display_name .. "]")
                 print("Do you want to replace the old recipe to the new one ? (yes/no)")
-                if not io.read():lower() ~= "yes" then
+                if io.read():lower() ~= "yes" then
                     print("\nRecipe not edited or deleted.")
                     return
                 end
