@@ -35,24 +35,21 @@ end
 
 -- return true if two items are identical (match only dmg, id, number of items... but ignoring ore dictionnary, effects...)
 function isItemIdentical(item1, item2, ignoreQty)
-    local matching = true
     for k,v in pairs(item1) do
         if type(v) ~= "table" and (ignoreQty or k ~= "qty") then
             if v ~= item2[k] then
-                matching = false
-                break
+                return false
             end
         end
     end
     for k,v in pairs(item2) do
         if type(v) ~= "table" and (ignoreQty or k ~= "qty") then
             if v ~= item1[k] then
-                matching = false
-                break
+                return false
             end
         end
     end
-    return matching
+    return true
 end
 
 local function isItemInList(item1, itemList, ignoreQty)
@@ -141,7 +138,7 @@ function saveRecipe(pedestals, centerPedestal)
     local aspects = {}
     local newAspects
     local outputItem = getPedestalItem(centerPedestal)
-    while outputItem == nil or (outputItem.id == centerItem.id and outputItem.dmg == centerItem.dmg) do
+    while outputItem == nil or isItemIdentical(centerItem, outputItem, true) do
         if timeout >= 3 then
             print("\nAdding recipe cancelled by user.")
             return
