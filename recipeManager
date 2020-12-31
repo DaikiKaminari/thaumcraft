@@ -121,15 +121,16 @@ function saveRecipe(pedestals, centerPedestal)
         return
     end
     -- case recipe already exists
-    local recipe = getMatchingRecipe(inputItems)
-    if recipe ~= nil then
-        --print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
-        print("Recipe already existing.")
+    local existingRecipe = getMatchingRecipe(inputItems)
+    if existingRecipe ~= nil then
+        print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
         print(" --> " .. recipe.outputItem.id .. " - " .. tostring(recipe.outputItem.dmg))
-        --if io.read():lower() ~= "yes" then
-        print("\nRecipe not edited or deleted.")
-        return
-        --end
+        if not io.read():lower() ~= "yes" then
+            print("\nRecipe not edited or deleted.")
+            return
+        else
+            print("\nRecipe will be modified.")
+        end
     end
 
     print("Waiting the end of the infusion.")
@@ -149,17 +150,33 @@ function saveRecipe(pedestals, centerPedestal)
         outputItem = getPedestalItem(centerPedestal)
     end    
 
+    local compactedInputItems = compactItemList(inputItems)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
         if isItemIdentical(r["outputItem"], outputItem) then
-            print("Recipe already existing : [" .. r.outputItem.display_name .. "]")
-            print("\nRecipe not edited or deleted.")
+            if not existingRecipe ~= nil then
+                -- case input items don't match any recipe but output match
+                print("Recipe already exists : [" .. r.outputItem.display_name .. "]")
+                print("Do you want to replace the old recipe to the new one ? (yes/no)")
+                if not io.read():lower() ~= "yes" then
+                    print("\nRecipe not edited or deleted.")
+                    return
+                end
+            end
+
+            -- case recipe is modified, the user agreed to modify it
+            -- (because either input or output items arlready exist in a recipe)
+            r["inputItems"] = compactedInputItems
+            r["centerItem"] = centerItem
+            r["outputItem"] = outputItem
+            objectJSON.encodeAndSavePretty("recipes", recipes)
+            print("Successfully modified recipe.")
             return
         end
     end
 
+    -- case the recipe do not already exist
     local newItem = {}
-    local compactedInputItems = compactItemList(inputItems)
     newItem["inputItems"] = compactedInputItems
     newItem["centerItem"] = centerItem
     newItem["outputItem"] = outputItem
