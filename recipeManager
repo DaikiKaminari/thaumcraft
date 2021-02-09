@@ -2,6 +2,7 @@
 function init()
     print("\n--- INIT recipeManager ---")
     os.loadAPI("lib/objectJSON")
+    os.loadAPI("lib/inventory")
     if not fs.exists("recipes") then
         objectJSON.encodeAndSavePretty("recipes", {})
     end
@@ -36,14 +37,30 @@ end
 -- return true if two items are identical (match only dmg, id, number of items... but ignoring ore dictionnary, effects...)
 function isItemIdentical(item1, item2, ignoreQty)
     for k,v in pairs(item1) do
-        if type(v) ~= "table" and (ignoreQty or k ~= "qty") then
+        if ignoreQty or k ~= "qty" then
+            if type(v) == "table" then
+                if item2[k] == nil then
+                    return false
+                end
+                if not isItemIdentical(item2[k], v, ignoreQty) then
+                    return false
+                end
+            end
             if v ~= item2[k] then
                 return false
             end
         end
     end
     for k,v in pairs(item2) do
-        if type(v) ~= "table" and (ignoreQty or k ~= "qty") then
+        if type(v) == "table" then
+            if item1[k] == nil then
+                return false
+            end
+            if not isItemIdentical(item1[k], v, ignoreQty) then
+                return false
+            end
+        end
+        if ignoreQty or k ~= "qty" then
             if v ~= item1[k] then
                 return false
             end
@@ -104,7 +121,17 @@ end
 function getMatchingRecipe(inputItems)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
-        if isItemListIdentical(r["inputItems"], inputItems, false) then
+        if inventory.isItemListIdentical(r["inputItems"], inputItems, false) then
+            return r
+        end
+    end
+    return nil
+end
+
+function getMatchingRecipeFromOutput(outputItem)
+    local recipes = getRecipes()
+    for _,r in pairs(recipes) do
+        if inventory.isItemIdentical(r["outputItem"], outputItem, true) then
             return r
         end
     end
@@ -124,7 +151,7 @@ function saveRecipe(pedestals, centerPedestal)
     local existingRecipe = getMatchingRecipe(inputItems)
     if existingRecipe ~= nil then
         print("\nRecipe already existing, do you want to remove it and re-make it ? (yes/no)")
-        print(" --> " .. recipe.outputItem.id .. " - " .. tostring(recipe.outputItem.dmg))
+        print(textutils.serialise(recipe.outputItem))
         if not io.read():lower() ~= "yes" then
             print("\nRecipe not edited or deleted.")
             return
@@ -139,7 +166,7 @@ function saveRecipe(pedestals, centerPedestal)
     local aspects = {}
     local newAspects
     local outputItem = getPedestalItem(centerPedestal)
-    while outputItem == nil or isItemIdentical(centerItem, outputItem, true) do
+    while outputItem == nil or inventory.isItemIdentical(centerItem, outputItem, true) do
         if timeout >= 3 then
             print("\nAdding recipe cancelled by user.")
             return
@@ -153,7 +180,7 @@ function saveRecipe(pedestals, centerPedestal)
     local compactedInputItems = compactItemList(inputItems)
     local recipes = getRecipes()
     for _,r in pairs(recipes) do
-        if isItemIdentical(r["outputItem"], outputItem) then
+        if inventory.isItemIdentical(r["outputItem"], outputItem) then
             if not existingRecipe ~= nil then
                 -- case input items don't match any recipe but output match
                 print("Recipe already exists : [" .. r.outputItem.display_name .. "]")
@@ -184,4 +211,17 @@ function saveRecipe(pedestals, centerPedestal)
 
     objectJSON.encodeAndSavePretty("recipes", recipes)
     print("Successfully added recipe.")
+end
+
+function deleteRecipe(centerPedestal)
+    local recipe = nil
+    print("\nDelete item from ? :\n1 - inputs\n2 - output")
+    local choice = io.read()
+    while recipe == nil do
+        recipe = getMatchingRecipe(inputItems) and (choice == "1") or getMatchingRecipeFromOutput(outputItem)
+    end
+    local recipes = getRecipes()
+    recipes[r] = nil
+    objectJSON.encodeAndSavePretty("recipes", recipes)
+    print("Successfully deleted recipe.")
 end
